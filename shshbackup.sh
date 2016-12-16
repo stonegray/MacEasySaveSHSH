@@ -98,6 +98,7 @@ done
 printf "> Getting shsh...\n"
 
 # save it
+
 ./tsschecker -d $MODELID -e $ECID -i 10.2 -s >> log_10_2.txt\
 	&& printf "> 10.2 SHSH OK...\n" || printf "> 10.2 FAILED. See log.txt!\n"
 ./tsschecker -d $MODELID -e $ECID -i 10.1.1 --buildid 14B150 -s >> log_10_1_1_150.txt\
@@ -106,6 +107,21 @@ printf "> Getting shsh...\n"
 	&& printf "> 10.1.1b100 SHSH OK...\n" || printf "> 10.2 FAILED. See log.txt!\n"
 ./tsschecker -d $MODELID -e $ECID -i 10.1 -s >> log_10_1.txt\
 	&& printf "> 10.1 SHSH OK...\n" || printf "> 10.2 FAILED. See log.txt!\n"
+
+nonces=( 352dfad1713834f4f94c5ff3c3e5e99477347b95 603be133ff0bdfa0f83f21e74191cf6770ea43bb 42c88f5a7b75bc944c288a7215391dc9c73b6e9f 0dc448240696866b0cc1b2ac3eca4ce22af11cb3 9804d99e85bbafd4bb1135a1044773b4df9f1ba3 )
+for nonce in "${nonces[@]}"
+do
+	mkdir $nonce && cd $nonce;
+	../tsschecker -d $MODELID -e $ECID -i 10.2 -s --apnonce $nonce >> log_10_2.txt\
+	&& printf "> 10.2 SHSH OK...\n" || printf "> 10.2 FAILED. See log.txt!\n"
+../tsschecker -d $MODELID -e $ECID -i 10.1.1 --buildid 14B150 -s --apnonce $nonce >> log_10_1_1_150.txt\
+	&& printf "> 10.1.1b150 SHSH OK...\n" || printf "> 10.1.1 FAILED. See log.txt!\n"
+../tsschecker -d $MODELID -e $ECID -i 10.1.1 --buildid 14B100 -s --apnonce $nonce >> log_10_1_1_100.txt\
+	&& printf "> 10.1.1b100 SHSH OK...\n" || printf "> 10.2 FAILED. See log.txt!\n"
+../tsschecker -d $MODELID -e $ECID -i 10.1 -s --apnonce $nonce >> log_10_1.txt\
+	&& printf "> 10.1 SHSH OK...\n" || printf "> 10.2 FAILED. See log.txt!\n"
+	cd ..
+done
 
 
 printf ">\n> If you don't see any errors above, the neccessary files should \n> be saved in this folder. Check the log files to be sure. Good luck!\n>\n"
