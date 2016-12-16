@@ -1,5 +1,11 @@
 #!/bin/bash
 
+
+# To resolve certificate errors,  /u/smurf3310 has suggested downloading the certificates from https://curl.haxx.se/ca/cacert.pem
+# If you want to do this, uncomment the next line to enable this. 
+# curl -Ls https://curl.haxx.se/ca/cacert.pem -o curl-ca-cert.crt && open curl-ca-cert.crt
+
+
 printf ">> SHSH Saver!\n>\n"
 clear
 if [ "x$(whoami)" == "xroot" ]; then
@@ -13,7 +19,7 @@ if [ "x$(whoami)" == "xroot" ]; then
 	exit
 fi
 printf "> shshsave.sh needs your root password to continue.\n> You can also exit the program, run sudo printf, and restart.\n>\n"
-echo -n "> Enter root password:\n"
+echo -n "> Enter root password:"
 while [ "x$(sudo whoami)" != "xroot" ];do #get user input
 	true
 done
@@ -47,6 +53,7 @@ rm -f log.txt
 
 # touch it
 touch log.txt
+
 
 # curl it
 curl -Ls https://github.com/tihmstar/tsschecker/releases/download/v1.0.5/tsschecker_1.0.5_osx.zip -o tsschecker.zip >> log.txt && printf "> Download OK...\n" || $(printf "Download FAILED, See log.txt. Exiting" && exit)
@@ -97,29 +104,30 @@ done
 # print it
 printf "> Getting shsh...\n"
 
-# save it
-
+# save nonceless versions
 ./tsschecker -d $MODELID -e $ECID -i 10.2 -s >> log_10_2.txt\
-	&& printf "> 10.2 SHSH OK...\n" || printf "> 10.2 FAILED. See log.txt!\n"
+	&& printf ">    10.2 SHSH OK...\n" || printf ">    10.2 FAILED. See log.txt!\n"
 ./tsschecker -d $MODELID -e $ECID -i 10.1.1 --buildid 14B150 -s >> log_10_1_1_150.txt\
-	&& printf "> 10.1.1b150 SHSH OK...\n" || printf "> 10.1.1 FAILED. See log.txt!\n"
+	&& printf ">    10.1.1b150 SHSH OK...\n" || printf ">    10.1.1 FAILED. See log.txt!\n"
 ./tsschecker -d $MODELID -e $ECID -i 10.1.1 --buildid 14B100 -s >> log_10_1_1_100.txt\
-	&& printf "> 10.1.1b100 SHSH OK...\n" || printf "> 10.2 FAILED. See log.txt!\n"
+	&& printf ">    10.1.1b100 SHSH OK...\n" || printf ">    10.2 FAILED. See log.txt!\n"
 ./tsschecker -d $MODELID -e $ECID -i 10.1 -s >> log_10_1.txt\
-	&& printf "> 10.1 SHSH OK...\n" || printf "> 10.2 FAILED. See log.txt!\n"
+	&& printf ">    10.1 SHSH OK...\n" || printf ">    10.2 FAILED. See log.txt!\n"
 
+# save nonce'd versions
 nonces=( 352dfad1713834f4f94c5ff3c3e5e99477347b95 603be133ff0bdfa0f83f21e74191cf6770ea43bb 42c88f5a7b75bc944c288a7215391dc9c73b6e9f 0dc448240696866b0cc1b2ac3eca4ce22af11cb3 9804d99e85bbafd4bb1135a1044773b4df9f1ba3 )
 for nonce in "${nonces[@]}"
 do
+	printf "> Getting shsh with nonce %.4s...\n" "$nonce"
 	mkdir $nonce && cd $nonce;
 	../tsschecker -d $MODELID -e $ECID -i 10.2 -s --apnonce $nonce >> log_10_2.txt\
-	&& printf "> 10.2 SHSH OK...\n" || printf "> 10.2 FAILED. See log.txt!\n"
-../tsschecker -d $MODELID -e $ECID -i 10.1.1 --buildid 14B150 -s --apnonce $nonce >> log_10_1_1_150.txt\
-	&& printf "> 10.1.1b150 SHSH OK...\n" || printf "> 10.1.1 FAILED. See log.txt!\n"
-../tsschecker -d $MODELID -e $ECID -i 10.1.1 --buildid 14B100 -s --apnonce $nonce >> log_10_1_1_100.txt\
-	&& printf "> 10.1.1b100 SHSH OK...\n" || printf "> 10.2 FAILED. See log.txt!\n"
-../tsschecker -d $MODELID -e $ECID -i 10.1 -s --apnonce $nonce >> log_10_1.txt\
-	&& printf "> 10.1 SHSH OK...\n" || printf "> 10.2 FAILED. See log.txt!\n"
+	&& printf ">    10.2 SHSH OK...\n" || printf ">    10.2 FAILED. See log.txt!\n"
+	../tsschecker -d $MODELID -e $ECID -i 10.1.1 --buildid 14B150 -s --apnonce $nonce >> log_10_1_1_150.txt\
+	&& printf ">    10.1.1b150 SHSH OK...\n" || printf ">    10.1.1 FAILED. See log.txt!\n"
+	../tsschecker -d $MODELID -e $ECID -i 10.1.1 --buildid 14B100 -s --apnonce $nonce >> log_10_1_1_100.txt\
+	&& printf ">    10.1.1b100 SHSH OK...\n" || printf ">    10.2 FAILED. See log.txt!\n"
+	../tsschecker -d $MODELID -e $ECID -i 10.1 -s --apnonce $nonce >> log_10_1.txt\
+	&& printf ">    10.1 SHSH OK...\n" || printf ">    10.2 FAILED. See log.txt!\n"
 	cd ..
 done
 
