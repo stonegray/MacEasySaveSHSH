@@ -102,7 +102,7 @@ do
 done
 
 # print it
-printf "> Getting shsh...\n"
+printf "> Getting shsh. This may take a long time if you don't have the IPSW...\n"
 
 # save nonceless versions
 ./tsschecker -d $MODELID -e $ECID -i 10.2 -s >> log_10_2.txt\
@@ -132,7 +132,7 @@ do
 done
 
 
-printf ">\n> If you don't see any errors above, the neccessary files should \n> be saved in this folder. Check the log files to be sure. Good luck!\n>\n"
+printf ">\n> If you don't see any errors above, the neccessary files should \n> be saved in ~/shshbackup. Check the log files to be sure. Good luck!\n>\n"
 
 
 
