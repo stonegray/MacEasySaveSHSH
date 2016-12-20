@@ -1,0 +1,5 @@
+
+*.shsh2
+autoblobgrab/
+tmp/
+*.zip
